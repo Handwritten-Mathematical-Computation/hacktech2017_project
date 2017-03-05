@@ -1,0 +1,6 @@
+google-cloud-vision==0.23.2
+google-api-python-client==1.6.2
+ftd2xx
+pypiwin32
+pygame
+font
