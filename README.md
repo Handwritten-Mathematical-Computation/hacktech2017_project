@@ -1,5 +1,6 @@
 # hacktech2017_project
 Handwritten Mathematical Computation
+
 Are you tired of entering an equation in your phone? Well now you can handwrite it as if you are doing homework.
 
 # How we built it:
@@ -9,12 +10,19 @@ More info on our Devpost:
 https://devpost.com/software/handwritten-mathematical-computation
 
 # How to run this program:
+
 pip install -r requirements.txt
+
 login to Google Cloud (link below)
+
 run server.py
+
 Press Start button on http://127.0.0.1:8080/
+
 run main.py
+
 Draw!
+
 have fun!
 
 # Ref Link:
