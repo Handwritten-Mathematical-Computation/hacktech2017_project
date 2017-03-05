@@ -28,8 +28,8 @@ import Window
 
 debug = False;
 class Calculator:
-    __APP_ID = "E3KYJG-QL67X8638A"
-    __SERVER = "http://api.wolframalpha.com/v2/query?"
+    __APP_ID = "E3KYJG-QL67X8638A"  # App ID for Wolfram Engine
+    __SERVER = "http://api.wolframalpha.com/v2/query?"  # Server for Wolfram Engine
     __ACC = 0.75
 
     __engine = None
@@ -46,22 +46,22 @@ class Calculator:
         self.__vision = vision.Client("Hacktech")
 
     def solve(self, image):
-        equation = self.__detect_equation(image)
-        if equation is None:
+        equation = self.__detect_equation(image)  # Try to detect an equation
+        if equation is None:  # If no equation was detected, then return None
             return None, None
         print "Equation: ", equation.encode('utf_8'), "|"
-        solution = self.__query_equation(equation.encode('utf_8'))
-        return equation, solution
+        solution = self.__query_equation(equation.encode('utf_8'))  # Try to solve the equation
+        return equation, solution  # return the equation and solution
 
     def __query_equation(self, equation):
-        if isinstance(equation, unicode):
+        if isinstance(equation, unicode):  # If the equation is in unicode, don't bother (Wolfram error occurs)
             return None
-        query = self.__engine.CreateQuery(equation)
+        query = self.__engine.CreateQuery(equation)  # Create a query for Wolfram
         wap.WolframAlphaQuery(query,self.__APP_ID)
-        result = self.__engine.PerformQuery(query)
+        result = self.__engine.PerformQuery(query)  # Perform the query and get the result
         if debug: print "RESULT: ", result
         res = wap.WolframAlphaQueryResult(result)
-        clean = self.__clean_result(res)
+        clean = self.__clean_result(res)  # Clean the result, and get the relevant points (like the solution)
         return clean if clean else None
         # return [wap.Pod(x).Title()[0] for x in res.Pods()], res.DataTypes()[0]
 
@@ -89,13 +89,13 @@ class Calculator:
         return ""
         """
         # """
-        image = self.__read_file(image_path)
-        img = self.__vision.image(content=image)
-        texts = img.detect_text()
+        image = self.__read_file(image_path)  # Open the image file
+        img = self.__vision.image(content=image)  # Get the image
+        texts = img.detect_text()  # Try to detect text in the image
         if debug:
             for text in texts:
                 print "Text Description: ", text.description
-        return self.__filter_texts(texts)
+        return self.__filter_texts(texts)  # Filter the texts, get the most likely one
         # """
 
     def __read_file(self, path):
@@ -105,9 +105,9 @@ class Calculator:
         return image
 
     def __filter_texts(self, texts):
-        c = lambda x, y: int((x.score - y.score) * 1 / self.__ACC)
+        c = lambda x, y: int((x.score - y.score) * 1 / self.__ACC)  # Sort based on the text's score
         texts.sort(c)
-        return texts[0].description if len(texts) else None
+        return texts[0].description if len(texts) else None  # Get the most likely one
 
     def __clean_result(self, solution):
         data_type = solution.DataTypes()[0]  # Get the Data Type of the input
@@ -150,14 +150,14 @@ class Calculator:
         plain = self.__find_plain(pod.Subpods())
         return plain if plain is not None else False
 
-    def __find_pod(self, pods, title):
+    def __find_pod(self, pods, title):  # Look for a pod whose title matches the given title
         for pod in pods:
             pod = wap.Pod(pod)
             if pod.Title()[0] == title:
                 return pod
         return None
 
-    def __find_plain(self, sub_pods):
+    def __find_plain(self, sub_pods):  # Look for a plaintext subpod
         for sub in sub_pods:
             sp = wap.Subpod(sub)
             if len(sp.Plaintext()):
